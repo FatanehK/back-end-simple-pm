@@ -3,28 +3,31 @@ from datetime import datetime
 from .status import status_enum
 
 
-class Tasks(db.Model):
+class Task(db.Model):
+    __tablename__ = 'tasks'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String)
     due_date = db.Column(db.DateTime)
-    task_description = db.Column(db.Text)
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    description = db.Column(db.Text)
     status = db.Column(status_enum)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user = db.relationship('Users', back_populates='tasks')
+    project_id = db.Column(db.Integer, db.ForeignKey(
+        'projects.id'), nullable=False)
+    assigned_to_id = db.Column(
+        db.Integer, db.ForeignKey('users.id'), nullable=True)
+    assigned_to = db.relationship('User', back_populates='assigned_tasks')
     project = db.relationship('Project', back_populates='tasks')
 
     def to_dict(self):
         task_dict = {
             'id': self.id,
             'title': self.title,
-            'task_description': self.task_description,
+            'due_date': self.due_date,
+            'description': self.description,
             'project_id': self.project_id,
-            'status_id': self.status_id,
-            'user_id': self.user_id,
             'status': self.status,
+            'assigned_to_id': self.assigned_to_id,
+            'assigned_to': self.assigned_to,
             'project': self.project,
-            'user': self.user
         }
         return task_dict
 
@@ -33,6 +36,6 @@ class Tasks(db.Model):
         if 'title' in data_dict and 'project_id' in data_dict:
             new_obj = cls(
                 title=data_dict['title'],
-                task_description=data_dict['task_description'],
+                description=data_dict['description'],
                 project_id=data_dict['project_id'])
         return new_obj

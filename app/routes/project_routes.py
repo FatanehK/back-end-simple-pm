@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response
 from app import db
 from app.models.project import Project
-from app.models.tasks import Tasks
+from app.models.task import Task
 from app.routes.helper_routes import validate
 
 project_bp = Blueprint('project_bp', __name__, url_prefix='/project')
@@ -36,7 +36,7 @@ def get_all_projects():
 def get_project_tasks(id):
     project = validate(id)
 
-    tasks = Tasks.query.filter(Tasks.project_id == project.id)
+    tasks = Task.query.filter(Task.project_id == project.id)
     tasks_response = [task.to_dict() for task in tasks]
 
     return jsonify(tasks_response), 200

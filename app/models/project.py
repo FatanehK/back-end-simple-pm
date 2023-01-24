@@ -3,19 +3,23 @@ from .status import status_enum
 
 
 class Project(db.Model):
+    __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String)
-    project_description = db.Column(db.Text)
+    description = db.Column(db.Text)
     status = db.Column(status_enum)
-    users = db.relationship(
-        'User', secondary="user_project", back_populates="project")
+    admin_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    admin = db.relationship('User', backref=db.backref(
+        'admin_projects', uselist=True))
+    members = db.relationship(
+        'User', secondary='project_members', back_populates='member_projects')
     tasks = db.relationship('Task', back_populates='project')
 
     def to_dict(self):
         project_dict = {
             'id': self.id,
             'tilte': self.title,
-            'project_description': self.project_description,
+            'description': self.description,
             'tasks': self.tasks,
             'users': self.users,
             'status_id': self.status_id,
@@ -27,7 +31,8 @@ class Project(db.Model):
     def from_dict(cls, data_dict):
         if 'title' in data_dict and 'users' in data_dict:
             new_obj = cls(title=data_dict.get('title'),
-                          project_description=data_dict.get('project_description'),
+                          description=data_dict.get(
+                              'description'),
                           users=data_dict['users'],
                           tasks=data_dict['tasks'],
                           status=data_dict['status'])

@@ -20,10 +20,9 @@ def create_app(test_config=None):
         "SQLALCHEMY_DATABASE_URI")
 
     from app.models.project import Project
-    from app.models.status import Status
-    from app.models.tasks import Tasks
-    from app.models.users import Users
-    from app.models.user_project import ProjectUsers
+    from app.models.task import Task
+    from app.models.users import User
+    from app.models.project_members import ProjectMembers
 
     db.init_app(app)
     migrate.init_app(app, db)

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response
 from app import db
 from app.models.project import Project
-from app.models.tasks import Tasks
+from app.models.task import Task
 from .helper_routes import validate
 
 tasks_bp = Blueprint('tasks_bp', __name__, url_prefix='/tasks')
@@ -14,8 +14,8 @@ def create_task():
         return make_response({"details": "Project_id and title must be in request body"}, 400)
     try:
         validate(Project, request_body['id'])
-        new_task = Tasks.from_dict(request_body)
-        validate(Tasks, new_task)
+        new_task = Task.from_dict(request_body)
+        validate(Task, new_task)
     except:
         return jsonify({"details": "Invalid Data"}), 400
 
@@ -29,7 +29,7 @@ def create_task():
 @tasks_bp.route("/id/status", methods=["PATCH"])
 def change_task_status(id):
 
-    update_task = validate(Tasks, id)
+    update_task = validate(Task, id)
     request_body = request.get_json()
 
     update_task.status = request_body.get('status', update_task.status)
