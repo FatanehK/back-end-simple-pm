@@ -1,18 +1,18 @@
 from app import db
 from datetime import datetime
+from .status import status_enum
 
 
 class Tasks(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String)
+    due_date = db.Column(db.DateTime)
     task_description = db.Column(db.Text)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-    status_id = db.Column(db.Integer, db.ForeignKey('status.id'))
+    status = db.Column(status_enum)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('Users', back_populates='tasks')
     project = db.relationship('Project', back_populates='tasks')
-    status = db.relationship('Status', back_populates='tasks')
-    due_date = db.Column(db.DateTime)
 
     def to_dict(self):
         task_dict = {

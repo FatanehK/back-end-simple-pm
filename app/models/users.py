@@ -24,13 +24,11 @@ class Users(db.Model):
 
     @classmethod
     def from_dict(cls, data_dict):
-        if 'project_id' in data_dict and 'email_address' in data_dict:
-        
-            new_obj = cls(full_name = data_dict['full_name'],
-                        is_admin = data_dict['is_admin'],
-                        is_active = data_dict['is_active'],
-                        email_address = data_dict ['email_address'],
-                        password = data_dict ['password'],
-                        project_id = data_dict['project_id']
-                    )
+        if 'email_address' in data_dict:
+            new_obj = cls(full_name=data_dict.get('full_name'),
+                          is_admin=data_dict.get('is_admin'),
+                          is_active=data_dict.get('is_active'),
+                          email_address=data_dict.get('email_address'),
+                          password=data_dict.get('password'),
+                          )
         return new_obj
