@@ -23,19 +23,18 @@ class Task(db.Model):
             'title': self.title,
             'due_date': self.due_date,
             'description': self.description,
-            'project_id': self.project_id,
             'status': self.status,
-            'assigned_to_id': self.assigned_to_id,
-            'assigned_to': self.assigned_to,
-            'project': self.project,
+            'assigned_to': self.assigned_to.to_dict() if self.assigned_to else None,
         }
         return task_dict
 
     @classmethod
     def from_dict(cls, data_dict):
-        if 'title' in data_dict and 'project_id' in data_dict:
-            new_obj = cls(
-                title=data_dict['title'],
-                description=data_dict['description'],
-                project_id=data_dict['project_id'])
+        new_obj = cls(
+            title=data_dict['title'],
+            description=data_dict.get('description'),
+            due_date=data_dict. get('due_date'),
+            status=data_dict.get('status'),
+            assigned_to_id=data_dict.get('assigned_to_id'),
+            project_id=data_dict.get('project_id'))
         return new_obj

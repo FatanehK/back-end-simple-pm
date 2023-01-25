@@ -13,18 +13,17 @@ def create_task():
     if 'project_id' not in request_body or 'title' not in request_body:
         return make_response({"details": "Project_id and title must be in request body"}, 400)
     try:
-        validate(Project, request_body['id'])
+        validate(Project, request_body['project_id'])
         new_task = Task.from_dict(request_body)
-        validate(Task, new_task)
-    except:
-        return jsonify({"details": "Invalid Data"}), 400
+    except Exception as e:
+        print(e)
+        return jsonify({"details": "Invalid Data"}), 404
 
     db.session.add(new_task)
     db.session.commit()
 
     response = {'Task': new_task.to_dict()}
     return make_response(jsonify(response)), 201
-
 
 @tasks_bp.route("/id/status", methods=["PATCH"])
 def change_task_status(id):
@@ -36,3 +35,7 @@ def change_task_status(id):
 
     db.session.commit()
     return jsonify({"Task": update_task.to_dict()}), 200
+
+@tasks_bp.route("/id", methods=["PATCH"])
+def update_task(id):
+    pass

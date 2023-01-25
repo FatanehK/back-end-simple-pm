@@ -12,5 +12,5 @@ def validate(cls, obj_id):
     if not matching_obj:
         response_str = f"{cls.__name__} with id {obj_id} was not found in the database"
         abort(make_response(jsonify({"message": response_str}), 404))
-
-# def validate_project(project:Project):
+    
+    return matching_obj

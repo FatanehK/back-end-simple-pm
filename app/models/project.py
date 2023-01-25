@@ -18,22 +18,17 @@ class Project(db.Model):
     def to_dict(self):
         project_dict = {
             'id': self.id,
-            'tilte': self.title,
+            'title': self.title,
             'description': self.description,
-            'tasks': self.tasks,
-            'users': self.users,
-            'status_id': self.status_id,
-            'status': self.status
+            'status': self.status,
+            'admin': self.admin.to_dict() if self.admin else None,
         }
         return project_dict
 
     @classmethod
     def from_dict(cls, data_dict):
-        if 'title' in data_dict and 'users' in data_dict:
-            new_obj = cls(title=data_dict.get('title'),
-                          description=data_dict.get(
-                              'description'),
-                          users=data_dict['users'],
-                          tasks=data_dict['tasks'],
-                          status=data_dict['status'])
+        new_obj = cls(
+            title=data_dict.get('title'),
+            admin_id=data_dict.get('admin_id'),
+            description=data_dict.get('description'))
         return new_obj
