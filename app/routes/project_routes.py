@@ -51,6 +51,14 @@ def get_project_tasks(id):
     return jsonify(tasks_response), 200
 
 
+@project_bp.route('/<id>/status', methods=['GET'])
+def get_project_status(id):
+    project = validate(Project, id)
+
+    project_status = project.status
+    return jsonify(project_status), 200
+
+
 @project_bp.route('/<id>', methods=['PUT'])
 def update_one_project_new_value(id):
     update_project = validate(Project, id)
@@ -69,7 +77,10 @@ def update_one_project_new_value(id):
 @project_bp.route('/<id>/members', methods=['GET'])
 def get_project_members(id):
     project = validate(Project, id)
-    project_members = ProjectMembers.query.filter_by(project_id=project.id).all()
+
+    project_members = ProjectMembers.query.filter_by(
+        project_id=project.id).all()
+    
     members = []
     for project_member in project_members:
         member = User.query.filter_by(id=project_member.user_id).first()
@@ -78,7 +89,7 @@ def get_project_members(id):
 
 
 @project_bp.route('/<id>/member', methods=['POST'])
-def get_user_project(id):
+def add_user_to_project(id):
     project = validate(Project, id)
     request_body = request.get_json()
 
@@ -90,6 +101,24 @@ def get_user_project(id):
     db.session.add(project_member)
     db.session.commit()
     return jsonify({'message': 'User added to project'}), 201
+
+# new route
+
+
+@project_bp.route('/admin/projects', methods=['GET'])
+def get_projects_by_admin_id():
+
+    request_body = request.get_json()
+    admin_id = request_body.get('admin_id')
+
+    projects = Project.query.filter_by(admin_id=admin_id)
+
+    if not projects:
+        return jsonify({'error': 'No projects found for this admin'}), 404
+
+    projects_data = [project.to_dict() for project in projects]
+
+    return jsonify(projects_data), 200
 
 
 # @project_bp.route('/<id>/tasks', methods=['POST'])

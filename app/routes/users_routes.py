@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, make_response
 from app import db
 from app.models.users import User
 from app.models.task import Task
+from app.models.project_members import ProjectMembers
 from .helper_routes import validate
 
 
@@ -35,8 +36,23 @@ def get_all_boards():
 @users_bp.route('/<id>/tasks', methods=['GET'])
 def get_user_tasks(id):
 
-    validate(User, id)
-    tasks = Task.query.filter_by(Task.assigned_to_id == id).all()
+    user = validate(User, id)
+    tasks = Task.query.filter_by(assigned_to_id = user.id).all()
     user_tasks = [task.to_dict() for task in tasks]
-
     return jsonify(user_tasks), 200
+
+
+
+@users_bp.route('/<id>/activity', methods=['PUT'])
+def update_user_activity(id):
+
+    user_update = validate(User, id)
+    request_body = request.get_json()
+
+    if 'is_active' not in request_body:
+        return make_response({"details": " user activity must be provided"}, 400)
+
+    user_update.is_active = request_body['is_active']
+
+    db.session.commit()
+    return jsonify({"user": user_update.to_dict()}), 200
