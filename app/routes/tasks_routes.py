@@ -36,8 +36,8 @@ def update_task(id):
     update_task.description = request_body.get(
         'description', update_task.description)
     update_task.due_date = request_body.get('due_date', update_task.due_date)
-    update_task.assigned_to = request_body.get(
-        'assigned_to', update_task.assigned_to)
+    update_task.assigned_to_id = request_body.get(
+        'assigned_to_id', update_task.assigned_to_id)
 
     db.session.commit()
     return jsonify({"task": update_task.to_dict()}), 200
