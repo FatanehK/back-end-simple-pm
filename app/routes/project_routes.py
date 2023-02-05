@@ -6,7 +6,7 @@ from app.models.task import Task
 from app.models.users import User
 from app.routes.helper_routes import validate
 
-project_bp = Blueprint('project_bp', __name__, url_prefix='/project')
+project_bp = Blueprint('project_bp', __name__, url_prefix='/projects')
 
 
 @project_bp.route('', methods=['POST'])

@@ -60,3 +60,10 @@ def assign_task_to_user(id):
     response = {'user': new_member.to_dict()}
 
     return make_response(jsonify(response)), 201
+
+
+@tasks_bp.route('/<id>', methods=['GET'])
+def get_one_task(id):
+
+    task = validate(Task, id)
+    return jsonify(task.to_dict()), 200
