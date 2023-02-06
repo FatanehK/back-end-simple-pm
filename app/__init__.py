@@ -14,6 +14,8 @@ load_dotenv()
 def create_app(test_config=None):
     app = Flask(__name__)
 
+    app.secret_key = os.environ.get("SECRET_KEY")
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
@@ -26,6 +28,9 @@ def create_app(test_config=None):
 
     db.init_app(app)
     migrate.init_app(app, db)
+
+    from .routes.auth_routes import auth_bp
+    app.register_blueprint(auth_bp)
 
     from .routes.project_routes import project_bp
     app.register_blueprint(project_bp)
