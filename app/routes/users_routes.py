@@ -26,7 +26,7 @@ def create_user():
 
 
 @users_bp.route("", methods=["GET"])
-def get_all_boards():
+def get_all_users():
     users = User.query.all()
 
     users_response = [user.to_dict() for user in users]
@@ -37,10 +37,9 @@ def get_all_boards():
 def get_user_tasks(id):
 
     user = validate(User, id)
-    tasks = Task.query.filter_by(assigned_to_id = user.id).all()
+    tasks = Task.query.filter_by(assigned_to_id=user.id).all()
     user_tasks = [task.to_dict() for task in tasks]
     return jsonify(user_tasks), 200
-
 
 
 @users_bp.route('/<id>/activity', methods=['PUT'])
