@@ -18,8 +18,12 @@ def create_app(test_config=None):
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        "SQLALCHEMY_DATABASE_URI")
+    DBHOST = os.environ.get("DBHOST")
+    DBNAME = os.environ.get("DBNAME")
+    DBPASS = os.environ.get("DBPASS")
+    DBUSER = os.environ.get("DBUSER")
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql+psycopg2://{DBUSER}:{DBPASS}@{DBHOST}/{DBNAME}"
 
     from app.models.project import Project
     from app.models.task import Task
