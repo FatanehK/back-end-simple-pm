@@ -29,6 +29,9 @@ def create_task():
 @tasks_bp.route('/<id>', methods=["PUT"])
 def update_task(id):
     update_task = validate(Task, id)
+    if update_task.status == 'Completed':
+        return jsonify({'error': "Completed project can't be updated "}), 404
+    
     request_body = request.get_json()
 
     update_task.title = request_body.get('title', update_task.title)
@@ -38,11 +41,12 @@ def update_task(id):
     update_task.due_date = request_body.get('due_date', update_task.due_date)
     update_task.assigned_to_id = request_body.get(
         'assigned_to_id', update_task.assigned_to_id)
+    
 
     db.session.commit()
     return jsonify({"task": update_task.to_dict()}), 200
 
-#  to especific user by id is not working
+#  to specific user by id is not working
 
 @tasks_bp.route('/<id>', methods=['PATCH'])
 def assign_task_to_user(id):

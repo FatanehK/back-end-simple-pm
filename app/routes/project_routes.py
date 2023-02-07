@@ -80,7 +80,7 @@ def get_project_members(id):
 
     project_members = ProjectMembers.query.filter_by(
         project_id=project.id).all()
-    
+
     members = []
     for project_member in project_members:
         member = User.query.filter_by(id=project_member.user_id).first()
