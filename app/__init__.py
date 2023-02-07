@@ -45,5 +45,9 @@ def create_app(test_config=None):
     from .routes.users_routes import users_bp
     app.register_blueprint(users_bp)
 
+    @app.route("/")
+    def root():
+        return "Project Manager Service is running!"
+
     CORS(app)
     return app
