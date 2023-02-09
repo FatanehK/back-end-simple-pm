@@ -23,7 +23,11 @@ def create_app(test_config=None):
     DBPASS = os.environ.get("DBPASS")
     DBUSER = os.environ.get("DBUSER")
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql+psycopg2://{DBUSER}:{DBPASS}@{DBHOST}/{DBNAME}"
+    if test_config is None:
+        app.config["SQLALCHEMY_TEST_DATABASE_URI"] = os.environ.get(
+            "SQLALCHEMY_TEST_DATABASE_URI")
+    else:
+        app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql+psycopg2://{DBUSER}:{DBPASS}@{DBHOST}/{DBNAME}"
 
     from app.models.project import Project
     from app.models.task import Task
