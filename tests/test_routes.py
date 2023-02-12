@@ -38,7 +38,7 @@ def test_get_project_by_id(client, one_project):
 
     assert response.status_code == 200
     assert response_body == {"id": 1, "title": "Build an app",
-                             "description": "app that calculate tips", "status": "New", 'admin': {'email': 'fataneh@test.com', 'full_name': 'Fataneh', 'id': 1, 'is_active': None}}
+                             "description": "app that calculate tips", "status": "New", 'admin': {'email': 'fataneh@test.com', 'full_name': 'Fataneh', 'id': 1}}
 
 
 def test_post_one_project_create_id_1_in_db(client, one_admin):
@@ -53,7 +53,7 @@ def test_post_one_project_create_id_1_in_db(client, one_admin):
     new_project = Project.query.get(1)
     new_project.title == "hello world"
     new_project.admin == {"full_name": "Fataneh",
-                          "email": "fataneh@test.com", "is_active": None, "id": 1}
+                          "email": "fataneh@test.com", "id": 1}
 
 
 def test_update_project(client, one_project, one_admin):
@@ -72,10 +72,9 @@ def test_update_project(client, one_project, one_admin):
             'title': "Updated project Title",
             'description': "Updated Test Description",
             'status': "New",
-            'admin': {'email': 'fataneh@test.com', 'full_name': 'Fataneh', 'id': 1, 'is_active': None}}}
+            'admin': {'email': 'fataneh@test.com', 'full_name': 'Fataneh', 'id': 1}}}
 
     project = Project.query.get(1)
-    # assert project.admin == {'email': 'fataneh@test.com','full_name': 'Fataneh', 'id': 1, 'is_active': None}
     assert project.title == "Updated project Title"
 
 # Task tests ============================================================================

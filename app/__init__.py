@@ -14,7 +14,7 @@ load_dotenv()
 def create_app(test_config=None):
     app = Flask(__name__)
 
-    app.secret_key = os.environ.get("SECRET_KEY")
+    app.secret_key = str(os.urandom(16))
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 

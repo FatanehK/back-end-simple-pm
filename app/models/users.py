@@ -17,7 +17,6 @@ class User(db.Model):
         user_dict = {
             'id': self.id,
             'full_name': self.full_name,
-            'is_active': self.is_active,
             'email': self.email
         }
         return user_dict
@@ -25,7 +24,6 @@ class User(db.Model):
     @classmethod
     def from_dict(cls, data_dict):
         new_obj = cls(full_name=data_dict.get('full_name'),
-                      is_active=data_dict.get('is_active'),
                       email=data_dict.get('email'),
                       password=data_dict.get('password'),
                       )

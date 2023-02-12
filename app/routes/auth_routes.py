@@ -1,15 +1,14 @@
 
 import os
 import requests
-from flask import Blueprint, request, jsonify, session, make_response
+from flask import Blueprint, request, jsonify, session, make_response, current_app
 import google.auth
-from google.oauth2.id_token import verify_oauth2_token
 import google.auth.transport.requests
 from pip._vendor import cachecontrol
 from google.oauth2 import id_token
 from app import db
 from app.models.users import User
-
+import jwt
 
 auth_bp = Blueprint('auth_bp', __name__)
 
@@ -32,15 +31,24 @@ def google_auth():
         request=token_request,
         audience=GOOGLE_CLIENT_ID)
 
-    user = User.query.filter_by(email=id_info["email"]).first()
-    if not user:
+    user:User = User.query.filter_by(email=id_info["email"]).first()
+    if user:
+        if user.full_name != id_info["name"]:
+            user_dict = {
+                "full_name": id_info["name"],
+            }
+            user = User.from_dict(user_dict)
+            db.session.update(user)
+            db.session.commit()
+    else:
         user_dict = {
-            # "full_name": id_info["full_name"],
+            "full_name": id_info["name"],
             "email": id_info["email"],
-            "is_active": True,
         }
         user = User.from_dict(user_dict)
         db.session.add(user)
         db.session.commit()
 
-    return make_response(jsonify(id_info)), 200
+    token = jwt.encode({'public_id': user.id},current_app.secret_key, 'HS256')
+
+    return make_response(jsonify({"user": user.to_dict(), "token": token})), 200
