@@ -107,7 +107,10 @@ def add_user_to_project(user: User, id):
 
     new_user = User.query.filter_by(email=email).first()
     if new_user:
-        return jsonify({'message': 'User already exist'}), 400
+        project_member = ProjectMembers.query.filter_by(
+            project_id=project.id, user_id=new_user.id).first()
+        if project_member != None:
+            return jsonify({'message': 'User already exist'}), 400
     else:
         user_dict = {
             "full_name": full_name,

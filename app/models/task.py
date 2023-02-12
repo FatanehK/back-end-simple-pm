@@ -24,7 +24,9 @@ class Task(db.Model):
             'due_date': self.due_date,
             'description': self.description,
             'status': self.status,
+            "project_id": self.project_id,
             'assigned_to': self.assigned_to.to_dict() if self.assigned_to else None,
+            'assigned_to_id': self.assigned_to_id
         }
         return task_dict
 
