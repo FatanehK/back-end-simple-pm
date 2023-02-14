@@ -14,7 +14,7 @@ project_bp = Blueprint('project_bp', __name__, url_prefix='/projects')
 def create_project(user: User):
     request_body = request.get_json()
 
-    if 'title' not in request_body:
+    if 'title' not in request_body or len(request_body["title"]) == 0:
         return make_response({"details": "title must be provided"}, 400)
 
     request_body["admin_id"] = user.id
@@ -31,7 +31,7 @@ def create_project(user: User):
 @project_bp.route('', methods=['GET'])
 @token_required
 def get_all_projects(user: User):
-    projects = Project.query.filter_by(admin_id=user.id)
+    projects = Project.query.filter_by(admin_id=user.id).order_by(Project.id)
 
     project_response = [project.to_dict() for project in projects]
 
@@ -50,7 +50,7 @@ def get_one_project(user: User, id):
 def get_project_tasks(user: User, id):
     project = validateProjectAccess(id, user.id)
 
-    tasks = Task.query.filter(Task.project_id == project.id)
+    tasks = Task.query.filter(Task.project_id == project.id).order_by(Task.id)
     tasks_response = [task.to_dict() for task in tasks]
 
     return jsonify(tasks_response), 200

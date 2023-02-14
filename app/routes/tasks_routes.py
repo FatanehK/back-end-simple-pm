@@ -12,11 +12,19 @@ tasks_bp = Blueprint('tasks_bp', __name__, url_prefix='/tasks')
 @token_required
 def create_task(user: User):
     request_body = request.get_json()
-    if 'project_id' not in request_body and 'title' not in request_body:
+    if 'project_id' not in request_body or 'title' not in request_body or len(request_body["title"]) == 0:
         return make_response({"details": "Project_id and title must be in request body"}, 400)
     try:
-        validateProjectAccess(request_body['project_id'], user.id)
+        validateProjectAccess(
+            request_body['project_id'], user.id)
+        user_assign_id = request_body['assigned_to']['id']
+        if user_assign_id == user.id:
+            request_body["assigned_to_id"] = user.id
+        else:
+            request_body["assigned_to_id"] = user_assign_id
+
         new_task = Task.from_dict(request_body)
+
     except:
         return jsonify({"details": "Invalid Data"}), 404
 
