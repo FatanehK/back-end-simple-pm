@@ -31,14 +31,10 @@ def google_auth():
         request=token_request,
         audience=GOOGLE_CLIENT_ID)
 
-    user:User = User.query.filter_by(email=id_info["email"]).first()
+    user: User = User.query.filter_by(email=id_info["email"]).first()
     if user:
         if user.full_name != id_info["name"]:
-            user_dict = {
-                "full_name": id_info["name"],
-            }
-            user = User.from_dict(user_dict)
-            db.session.update(user)
+            user.full_name = id_info["name"]
             db.session.commit()
     else:
         user_dict = {
@@ -49,6 +45,6 @@ def google_auth():
         db.session.add(user)
         db.session.commit()
 
-    token = jwt.encode({'public_id': user.id},current_app.secret_key, 'HS256')
+    token = jwt.encode({'public_id': user.id}, current_app.secret_key, 'HS256')
 
     return make_response(jsonify({"user": user.to_dict(), "token": token})), 200
