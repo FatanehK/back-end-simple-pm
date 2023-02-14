@@ -6,7 +6,7 @@ Project management web application app provide a tool for individuals and organi
 
 # Dependencies
 
-The is a Flask service using SqlAlchamy and PostgresSQL for Db.
+The is a Flask service using SQLAlchemy and PostgresSQL for Db.
 You can find list of all dependencies in the requirements.txt file.
 
 
