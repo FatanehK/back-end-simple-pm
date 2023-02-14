@@ -60,6 +60,11 @@ def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
         token = None
+        # is_test = current_app.config["TESTING"]
+        # if is_test:
+        #     current_user = User.query.filter_by(id=1).first()
+        #     return f(current_user, *args, **kwargs)
+
         # ensure the jwt-token is passed with the headers
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']

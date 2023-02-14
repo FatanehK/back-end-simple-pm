@@ -17,6 +17,13 @@ def app():
 
     with app.app_context():
         db.create_all()
+        # user_dict = {
+        #     "full_name": "test user",
+        #     "email": "test@test1.com"
+        # }
+        # user = User.from_dict(user_dict)
+        # db.session.add(user)
+        # db.session.commit()
         yield app
 
     # close and remove the temporary database
@@ -46,13 +53,13 @@ def one_project(app, one_admin):
 
 
 @pytest.fixture
-def one_task(app, one_admin,one_project):
+def one_task(app, one_admin, one_project):
     new_task = Task(title="Build the enivroment",
                     description="fix the requirment and dependencies",
                     due_date=None,
                     status="New",
-                    assigned_to = None,
-                    project_id= 1)
+                    assigned_to=None,
+                    project_id=1)
     db.session.add(new_task)
     db.session.commit()
 

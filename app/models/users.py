@@ -18,6 +18,7 @@ class User(db.Model):
             'id': self.id,
             'full_name': self.full_name,
             'email': self.email
+            
         }
         return user_dict
 
